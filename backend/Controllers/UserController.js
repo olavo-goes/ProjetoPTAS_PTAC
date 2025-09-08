@@ -1,7 +1,6 @@
-const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
-const {PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 
@@ -74,14 +73,14 @@ class UserController {
     }
 
     // middleware
-    static async verificarAutenticacao(req, res, next){
+    static async verificarAutenticacao(req, res, next) {
         const auth = req.headers["authorization"];
-        
+
         let token
-        if(auth){
+        if (auth) {
             token = auth.split(" ")[1];
             jwt.verify(token, process.env.SENHA_TOKEN, (err, payload) => {
-                if(err) {
+                if (err) {
                     return res.json({
                         msg: "seu login expirou",
                     })
@@ -90,17 +89,17 @@ class UserController {
                 next()
             })
 
-        }else{
+        } else {
             return res.json({
                 msg: "Token não encontrado."
             })
         }
     }
 
-    static async verificaIsAdmin(req, res, next){
-        if(!req.idUsuario){
+    static async verificaIsAdmin(req, res, next) {
+        if (!req.idUsuario) {
             return res.json({
-            msg: "Voce não está autenticado."
+                msg: "Voce não está autenticado."
             })
         }
         const usuario = await prisma.usuario.findUnique({
@@ -108,12 +107,12 @@ class UserController {
                 id: req.idUsuario,
             }
         })
-        if(!usuario.isAdmin){
+        if (!usuario.isAdmin) {
             return res.json({
-            msg: "Acesso negado! Você não é um administrador :("
+                msg: "Acesso negado! Você não é um administrador :("
             })
         }
-    next()
+        next()
     }
 }
 

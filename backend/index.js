@@ -1,12 +1,11 @@
 const express = require("express");
-const UserController = require("./Controllers/UserControllers");
 const UserController = require("./Controllers/UserController");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.get("/areaLogada",UserController.verificarAutentbicacao, (req, res) => {
+app.get("/areaLogada",UserController.verificarAutenticacao, (req, res) => {
     res.json({
         msg: "Você está logado com o id" + req.idUsuario + " e pode acessar esse recurso" 
     })});
