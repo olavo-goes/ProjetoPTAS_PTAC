@@ -1,9 +1,13 @@
 const express = require("express");
 const UserController = require("./Controllers/UserController");
 const app = express();
+const cors = require("cors");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
+const dotenv = require("dotenv");
+dotenv.config();
 
 app.get("/areaLogada",UserController.verificarAutenticacao, (req, res) => {
     res.json({
