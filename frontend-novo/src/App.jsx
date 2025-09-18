@@ -10,7 +10,7 @@ function App () {
     <Router>
       <Routes>
         <Route path="/cadastro" element={<Cadastro />}/>
-        <Route path="/login" element={<Login />}/>
+        <Route path="/" element={<Login />}/>
         <Route path="/area-logada" element={<AreaLogada />} />
       </Routes>
     </Router>

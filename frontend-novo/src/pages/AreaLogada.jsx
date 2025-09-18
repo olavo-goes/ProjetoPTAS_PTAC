@@ -1,10 +1,11 @@
 import React from "react";
+import styles from "./AreaLogada.module.css"; // Importa o CSS Module
 
 function AreaLogada() {
   return (
-    <div>
-      <h1>Área logada</h1>
-      <p>Você realizou o login</p>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Área Logada</h1>
+      <p className={styles.text}>Você realizou o login com sucesso!</p>
     </div>
   );
 }
