@@ -8,20 +8,33 @@ class UserController {
     static async cadastrar(req, res) {
         try {
             const salt = bcrypt.genSaltSync(8);
-            const hashSenha = bcrypt.hashSync(req.body.senha, salt);
+            const hashPassword = bcrypt.hashSync(req.body.password, salt);
 
             const usuario = await prisma.usuario.create({
                 data: {
                     nome: req.body.nome,
                     email: req.body.email,
-                    senha: hashSenha,
+                    password: hashPassword,
                 },
             });
 
-            res.json({ usuarioId: usuario.id });
+
+            const token = jwt.sign({ id: usuario.id }, process.env.SENHA_TOKEN, {
+                expiresIn: "1h"
+            })
+
+            res.status(201).json({
+                mensagem: "Usuário cadastrado com sucesso!",
+                erro: false,
+                token: token
+            })
         } catch (error) {
             console.error("Erro no cadastro:", error.message);
-            res.status(500).json({ erro: "Erro ao cadastrar usuário" });
+            res.status(500).json({
+                erro: true,
+                mensagem: "erro ao realizar cadastro"
+
+            });
         }
     }
 
@@ -32,12 +45,18 @@ class UserController {
             });
 
             if (!usuario) {
-                return res.status(404).json({ msg: "Usuário não existe!" });
+                return res.status(404).json({ 
+                    mensagem: "Usuário não existe!",
+                    erro: true 
+                });
             }
 
-            const correto = bcrypt.compareSync(req.body.senha, usuario.senha);
+            const correto = bcrypt.compareSync(req.body.password, usuario.password);
             if (!correto) {
-                return res.status(401).json({ msg: "Senha incorreta!" });
+                return res.status(401).json({ 
+                    mensagem: "Senha incorreta!",
+                    erro: true
+                 });
             }
 
             const token = jwt.sign({ id: usuario.id }, process.env.SENHA_TOKEN, {
@@ -45,32 +64,19 @@ class UserController {
             });
 
             res.json({
-                msg: "Autenticado com sucesso!",
+                mensagem: "Autenticado com sucesso!",
+                erro: false,
                 token: token,
             });
         } catch (error) {
             console.error("Erro no login:", error.message);
-            res.status(500).json({ erro: "Erro ao fazer login" });
+            res.status(500).json({
+                mensagem: "Seu login expirou",
+                erro: true
+            });
         }
     }
 
-    static async verificarAutenticação(req, res, next) {
-        const auth = req.headers["authorization"];
-
-        if (!auth) {
-            return res.status(401).json({ msg: "Token não fornecido." });
-        }
-
-        const token = auth.split(" ")[1];
-
-        jwt.verify(token, process.env.SENHA_TOKEN, (err, payload) => {
-            if (err) {
-                return res.status(403).json({ msg: "Seu login expirou." });
-            }
-            req.idUsuario = payload.id;
-            next();
-        });
-    }
 
     // middleware
     static async verificarAutenticacao(req, res, next) {
@@ -81,8 +87,9 @@ class UserController {
             token = auth.split(" ")[1];
             jwt.verify(token, process.env.SENHA_TOKEN, (err, payload) => {
                 if (err) {
-                    return res.json({
-                        msg: "seu login expirou",
+                    return res.status(403).json({
+                        mensagem: "Seu login expirou",
+                        erro: true
                     })
                 }
                 req.idUsuario = payload.id
@@ -90,16 +97,18 @@ class UserController {
             })
 
         } else {
-            return res.json({
-                msg: "Token não encontrado."
+            return res.status(401).json({
+                mensagem: "Token não encontrado.",
+                erro: true
             })
         }
     }
 
     static async verificaIsAdmin(req, res, next) {
         if (!req.idUsuario) {
-            return res.json({
-                msg: "Voce não está autenticado."
+            return res.status(401).json({
+                mensagem: "Voce não está autenticado.",
+                erro: true 
             })
         }
         const usuario = await prisma.usuario.findUnique({
@@ -108,8 +117,9 @@ class UserController {
             }
         })
         if (!usuario.isAdmin) {
-            return res.json({
-                msg: "Acesso negado! Você não é um administrador :("
+            return res.status(403).json({
+                mensagem: "Acesso negado! Você não é um administrador.",
+                erro: true
             })
         }
         next()

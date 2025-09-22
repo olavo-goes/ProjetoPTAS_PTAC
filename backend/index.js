@@ -21,8 +21,8 @@ app.get("/areaAdmin",UserController.verificarAutenticacao,UserController.verific
 
 
 try {
-    const UserRoutes = require("./Routes/UserRoutes");
-    app.use("/usuario", UserRoutes);
+    const authRoutes = require("./auth/authRoutes");
+    app.use("/auth", authRoutes);
 } catch (error) {
     console.error("Erro ao carregar rotas de usuario:", error.message);
     process.exit(1); 
@@ -42,3 +42,5 @@ app.listen(PORT, (err) => {
         console.log(`Aplicação rodando na porta local ${PORT}`);
     }
 });
+
+module.exports = app;
