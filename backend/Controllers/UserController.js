@@ -60,7 +60,7 @@ class UserController {
             }
 
             const token = jwt.sign({ id: usuario.id }, process.env.SENHA_TOKEN, {
-                expiresIn: "1h",
+                expiresIn: "10h",
             });
 
             res.json({
