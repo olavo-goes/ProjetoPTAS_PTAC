@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import AreaLogada from "./pages/AreaLogada";
 
 
+
 function App () {
   return(
     <Router>
