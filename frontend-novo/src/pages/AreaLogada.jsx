@@ -1,12 +1,17 @@
 import React from "react";
-import styles from "./AreaLogada.module.css"; // Importa o CSS Module
+import { Link } from "react-router-dom"; 
+import styles from "./AreaLogada.module.css";
+import Header from "../Components/Header";
 
 function AreaLogada() {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Área Logada</h1>
-      <p className={styles.text}>Você realizou o login com sucesso!</p>
-    </div>
+    <>
+      <Header />
+      <div className={styles.container}>
+        <h1 className={styles.title}>Área Logada</h1>
+        <p className={styles.text}>Você realizou o login com sucesso!</p>
+      </div>
+    </>
   );
 }
 
