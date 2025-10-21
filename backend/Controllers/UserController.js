@@ -45,18 +45,18 @@ class UserController {
             });
 
             if (!usuario) {
-                return res.status(404).json({ 
+                return res.status(404).json({
                     mensagem: "Usuário não existe!",
-                    erro: true 
+                    erro: true
                 });
             }
 
             const correto = bcrypt.compareSync(req.body.password, usuario.password);
             if (!correto) {
-                return res.status(401).json({ 
+                return res.status(401).json({
                     mensagem: "Senha incorreta!",
                     erro: true
-                 });
+                });
             }
 
             const token = jwt.sign({ id: usuario.id }, process.env.SENHA_TOKEN, {
@@ -74,6 +74,80 @@ class UserController {
                 mensagem: "Seu login expirou",
                 erro: true
             });
+        }
+    }
+
+    static async buscarPerfil(req, res) {
+        try {
+            const usuario = await prisma.usuario.findUnique({
+                where: { id: req.idUsuario },
+                select: {
+                    nome: true,
+                    email: true,
+                    isAdmin: true,
+                    dataCadastro: true,
+                    ultimaAtualizacao: true
+                }
+            });
+
+
+            if(!usuario){
+                return res.status(404).json({
+                    mensagem: "Usuario não encontrado!",
+                    erro: true
+                })
+            }
+            res.json({
+                mensagem: "Perfil carregado com sucesso!",
+                erro: false,
+                usuario
+            })
+        }
+        catch (err) {
+            console.log("Erro ao encontrar perfil: ", err.message)
+            res.status(500).json({
+                menssagem: "Erro ao buscar perfil!",
+                erro: true
+            })
+        }
+    }
+
+    static async atualizarPerfil (req,res){
+        try{
+            const{usuario} = req.body;
+
+            if(!usuario || !usuario.nome || !usuario.email){
+                return res.status(400).json({
+                    mensagem: "Dados incompletos para atualização!",
+                    erro: true
+                })
+            }
+            const atualizado = await prisma.usuario.update({
+                where: {id: req.idUsuario},
+                data: {
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    ultimaAtualizacao: new Date()
+                }
+            });
+            res.status(200).json({
+                mensagem: "Perfil atualizado com sucesso!",
+                erro: false
+            })
+        } catch(error){
+            console.error("Erro ao atualizar perfil:", error.message);
+            res.status(500).json({
+                mensagem: "Erro ao atualizar perfil!",
+                erro: true
+            })
+        }
+    }
+
+    static async cadastrarMesa(req,res){
+        try{
+            
+        }catch(err){
+
         }
     }
 
@@ -108,7 +182,7 @@ class UserController {
         if (!req.idUsuario) {
             return res.status(401).json({
                 mensagem: "Voce não está autenticado.",
-                erro: true 
+                erro: true
             })
         }
         const usuario = await prisma.usuario.findUnique({

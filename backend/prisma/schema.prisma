@@ -22,4 +22,6 @@ model Usuario {
   email    String  @unique
   password    String
   isAdmin  Boolean @default(false)
+  dataCadastro       DateTime @default(now())
+  ultimaAtualizacao  DateTime @updatedAt
 }
