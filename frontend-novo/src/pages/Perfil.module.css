@@ -1,37 +1,186 @@
 .container {
   padding: 20px;
-  max-width: 500px;
-  margin: auto;
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
+  margin-bottom: 25px;
+  font-size: 28px;
+  color: #711a74;
+  font-weight: 600;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .card {
-  background-color: #f2f2f2;
-  padding: 20px;
+  background-color: #f9f9f9;
+  padding: 25px;
   border-radius: 10px;
+  border: 1px solid #e0e0e0;
 }
 
 .info p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #555;
+  margin: 12px 0;
+  font-size: 17px;
+  color: #444;
+  line-height: 1.5;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.info p strong {
+  color: #2c3e50;
 }
 
 .message {
-  color: red;
+  color: #e74c3c;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 20px;
+  font-weight: 500;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .loading {
   text-align: center;
   font-size: 18px;
-  margin-top: 50px;
-  color: #777;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-top: 60px;
+  color: #888;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 15px;
+    margin: 20px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .info p {
+    font-size: 16px;
+  }
+}
+
+/* Campos de edição */
+.form label {
+  display: block;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 16px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input:focus {
+  border-color: #711a74;
+  box-shadow: 0 0 5px rgba(113, 26, 116, 0.3);
+  outline: none;
+}
+
+/* Botões */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.editBtn,
+.saveBtn,
+.cancelBtn {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Cores consistentes com sua paleta */
+.editBtn {
+  background-color: #711a74;
+  color: #fff;
+}
+
+.editBtn:hover {
+  background-color: #8e2c91;
+  transform: translateY(-2px);
+}
+
+.saveBtn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.saveBtn:hover {
+  background-color: #34c759;
+  transform: translateY(-2px);
+}
+
+.cancelBtn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.cancelBtn:hover {
+  background-color: #ff6b5a;
+  transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .buttons {
+    flex-direction: column;
+  }
+
+  .editBtn,
+  .saveBtn,
+  .cancelBtn {
+    margin: 5px 0;
+    width: 100%;
+  }
+}
+
+.senhaSection {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.senhaSection h4 {
+  color: #711a74;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
