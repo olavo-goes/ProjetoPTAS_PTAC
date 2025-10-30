@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
-import styles from "./Cadastro.module.css";
+import styles from "../styles/Cadastro.module.css";
 
 function Cadastro() {
   const [cadastro, setCadastro] = useState({

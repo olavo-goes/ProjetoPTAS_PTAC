@@ -143,11 +143,21 @@ class UserController {
         }
     }
 
-    static async cadastrarMesa(req,res){
+    static async buscarMesa (req,res){
         try{
-            
-        }catch(err){
+            const mesas = await prisma.mesa.findMany();
 
+            res.status(200).json({
+                mensagem: "Mesas carregadas com sucesso!",
+                erro: false,
+                mesas
+            })
+        }catch(err){
+            console.log("Erro ao buscar mesas!", err.message)
+            res.status(500).json({
+                mensagem: "Erro ao buscar mesas!",
+                erro: true
+            })
         }
     }
 
@@ -198,6 +208,27 @@ class UserController {
         }
         next()
     }
+
+    static async listarUsuarios(req, res) {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      select: { id: true, nome: true, email: true, isAdmin: true }
+    });
+
+    res.status(200).json({
+      mensagem: "Usuários carregados com sucesso!",
+      erro: false,
+      usuarios
+    });
+  } catch (err) {
+    console.error("Erro ao listar usuários:", err.message);
+    res.status(500).json({
+      mensagem: "Erro ao carregar usuários!",
+      erro: true
+    });
+  }
+}
+
 }
 
 module.exports = UserController;

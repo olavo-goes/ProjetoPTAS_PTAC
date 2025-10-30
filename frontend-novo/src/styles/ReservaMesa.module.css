@@ -1,0 +1,74 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  padding: 40px 20px;
+}
+
+.title {
+  font-size: 2rem;
+  color: #4b0082;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 320px;
+  padding: 25px 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input,
+.select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.input:focus,
+.select:focus {
+  border-color: #8c00ff;
+  outline: none;
+}
+
+.submitBtn {
+  padding: 10px;
+  background-color: #8c00ff;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitBtn:hover {
+  background-color: #6a00cc;
+}
+
+.message {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #21e40f;
+  text-align: center;
+}

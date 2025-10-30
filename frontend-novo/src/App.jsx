@@ -6,6 +6,7 @@ import AreaLogada from "./pages/AreaLogada";
 import Perfil from "./pages/Perfil";
 import ListaPerfis from "./pages/ListaPerfis";
 import CadastroMesa from "./pages/CadastroMesa";
+import ReservaMesa from "./pages/ReservaMesa";
 
 
 
@@ -18,7 +19,8 @@ function App() {
         <Route path="/area-logada" element={<AreaLogada />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/perfis" element={<ListaPerfis />} />
-        <Route path="/CadastroMesas" element={<CadastroMesa />} />
+        <Route path="/cadastro-mesas" element={<CadastroMesa />} />
+        <Route path="/reserva-mesas" element={<ReservaMesa />} />
       </Routes>
     </Router>
   );

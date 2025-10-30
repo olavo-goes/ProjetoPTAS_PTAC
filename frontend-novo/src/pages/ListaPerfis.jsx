@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
-import styles from "./ListaPerfis.module.css";
+import styles from "../styles/ListaPerfis.module.css";
 
 function ListaPerfis() {
   const [usuarios, setUsuarios] = useState([]);
@@ -20,14 +21,15 @@ function ListaPerfis() {
         if (res.data.usuarios && res.data.usuarios.length > 0) {
           setUsuarios(res.data.usuarios);
         } else {
-          throw new Error("Lista vazia");
+          setMensagem("Nenhum perfil encontrado.");
         }
       } catch (err) {
+        console.error("Erro ao buscar usuários:", err.message);
         setMensagem("Erro ao carregar lista de perfis. Exibindo dados simulados.");
         const simulados = [
-          { id: 1, nome: "Perfil Simulado 1", email: "Perfil1@exemplo.com" },
-          { id: 2, nome: "Perfil Simulado 2", email: "Perfil2@exemplo.com" },
-          { id: 3, nome: "Perfil Simulado 3", email: "Perfil2@exemplo.com" },
+          { id: 1, nome: "Perfil Simulado 1", email: "perfil1@exemplo.com" },
+          { id: 2, nome: "Perfil Simulado 2", email: "perfil2@exemplo.com" },
+          { id: 3, nome: "Perfil Simulado 3", email: "perfil3@exemplo.com" },
         ];
         setUsuarios(simulados);
       }
@@ -47,6 +49,15 @@ function ListaPerfis() {
           <div key={usuario.id} className={styles.card}>
             <p><strong>Nome:</strong> {usuario.nome}</p>
             <p><strong>Email:</strong> {usuario.email}</p>
+
+            <div className={styles.actions}>
+              <Link to={`/perfil/${usuario.id}`} className={styles.viewBtn}>
+                👁 Ver
+              </Link>
+              <Link to={`/perfil/editar/${usuario.id}`} className={styles.editBtn}>
+                ✏ Editar
+              </Link>
+            </div>
           </div>
         ))}
       </div>

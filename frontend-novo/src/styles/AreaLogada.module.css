@@ -1,0 +1,89 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* para o conteúdo ficar mais natural */
+  padding-top: 80px;
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #8c00ff;
+  margin-bottom: 10px;
+}
+
+.text {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* Grade de mesas */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1000px;
+  justify-items: center;
+}
+
+/* Cartão de cada mesa */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 240px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  color: #8c00ff;
+  margin-bottom: 8px;
+}
+
+/* Status da mesa */
+.statusDisponivel {
+  color: green;
+  font-weight: bold;
+}
+
+.statusOcupada {
+  color: red;
+  font-weight: bold;
+}
+
+/* Botão de reserva */
+.btnReserva {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btnReserva:hover {
+  background-color: #2980b9;
+}
+
+/* Caso não haja mesas */
+.empty {
+  color: #777;
+  font-style: italic;
+  margin-top: 20px;
+}
