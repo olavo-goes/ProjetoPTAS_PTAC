@@ -21,5 +21,11 @@ router.get("/mesa", UsuarioController.buscarMesa)
 router.post("/reservas/novo", UsuarioController.verificarAutenticacao, UsuarioController.reservarMesa)
 router.get("/reservas", UsuarioController.verificarAutenticacao, UsuarioController.verMinhasReservas)
 
+router.post("/mesa/novo", UsuarioController.verificarAutenticacao, UsuarioController.verificaIsAdmin, UsuarioController.cadastrarMesa)
+router.get("/mesa", UsuarioController.buscarMesa)
+
+router.post("/reservas/novo", UsuarioController.verificarAutenticacao, UsuarioController.reservarMesa)
+router.get("/reservas", UsuarioController.verificarAutenticacao, UsuarioController.verMinhasReservas)
+
 
 module.exports = router;
