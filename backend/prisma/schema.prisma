@@ -24,4 +24,28 @@ model Usuario {
   isAdmin  Boolean @default(false)
   dataCadastro       DateTime @default(now())
   ultimaAtualizacao  DateTime @updatedAt
+
+
+  reservas  Reserva[]
+}
+
+
+model Mesa {
+   id        Int     @id @default(autoincrement())
+   codigo    String
+   n_lugares String
+
+   reservas  Reserva[]
+}
+
+
+model Reserva {
+   id         Int      @id @default(autoincrement())
+   data       DateTime
+   n_pessoas  Int
+   mesaId     Int
+   usuarioId  Int
+
+   mesa       Mesa     @relation(fields: [mesaId], references: [id])
+   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 }

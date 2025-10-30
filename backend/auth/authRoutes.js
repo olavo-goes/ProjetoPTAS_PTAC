@@ -9,5 +9,11 @@ router.patch("/perfil", UsuarioController.verificarAutenticacao, UsuarioControll
 router.get("/usuarios", UserController.verificarAutenticacao, UserController.verificaIsAdmin, UserController.listarUsuarios);
 
 
+router.post("/mesa/novo", UsuarioController.verificarAutenticacao, UsuarioController.verificaIsAdmin, UsuarioController.cadastrarMesa)
+router.get("/mesa", UsuarioController.buscarMesa)
+
+router.post("/reservas/novo", UsuarioController.verificarAutenticacao, UsuarioController.reservarMesa)
+router.get("/reservas", UsuarioController.verificarAutenticacao, UsuarioController.verMinhasReservas)
+
 
 module.exports = router;
