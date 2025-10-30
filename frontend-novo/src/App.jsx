@@ -7,7 +7,7 @@ import Perfil from "./pages/Perfil";
 import ListaPerfis from "./pages/ListaPerfis";
 import CadastroMesa from "./pages/CadastroMesa";
 import ReservaMesa from "./pages/ReservaMesa";
-
+import ConsultarMesas from "./pages/ConsultarMesas";
 
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <Route path="/perfis" element={<ListaPerfis />} />
         <Route path="/cadastro-mesas" element={<CadastroMesa />} />
         <Route path="/reserva-mesas" element={<ReservaMesa />} />
+        <Route path="/consultarMesas" element={<ConsultarMesas/>} />
       </Routes>
     </Router>
   );
