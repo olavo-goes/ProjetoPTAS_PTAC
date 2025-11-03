@@ -32,6 +32,7 @@ function Header() {
               <Link to="/area-logada" className={styles.modalLink} onClick={fecharMenu}>Área Logada</Link>
               <Link to="/" className={styles.modalLink} onClick={fecharMenu}>Sair</Link>
               <Link to="/listar-reservas" className={styles.modalLink} onClick={fecharMenu}>Minhas Reservas</Link>
+               <Link to="/consultarMesas" className={styles.modalLink} onClick={fecharMenu}>Ver Mesas</Link>
             </nav>
             <button className={styles.btnFechar} onClick={fecharMenu}>Fechar</button>
           </div>
