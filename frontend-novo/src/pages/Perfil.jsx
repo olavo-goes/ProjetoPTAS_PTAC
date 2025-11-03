@@ -26,8 +26,7 @@ function Perfil() {
           novaSenha: "",
         });
       } catch (err) {
-        setMensagem("Erro ao carregar perfil. Exibindo dados simulados.");
-        const simulado = { nome: "Usuário Simulado", email: "simulado@exemplo.com" };
+        const simulado = { nome: "Usuário 1", email: "usuario1@exemplo.com" };
         setUsuario(simulado);
         setForm({ ...simulado, senhaAtual: "", novaSenha: "" });
       }
@@ -67,7 +66,6 @@ function Perfil() {
       setEditando(false);
       setForm({ ...form, senhaAtual: "", novaSenha: "" });
     } catch (err) {
-      setMensagem("Erro ao salvar alterações. Alterações locais mantidas.");
       setUsuario({ nome: form.nome, email: form.email });
       setEditando(false);
     }

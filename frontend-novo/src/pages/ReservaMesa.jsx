@@ -78,7 +78,7 @@ function ReservaMesa() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Reserva de Mesas</h2>
+      <h2 className={styles.title}>Reserva Mesa</h2>
 
       {mensagem && <p className={styles.message}>{mensagem}</p>}
 

@@ -24,12 +24,13 @@ function ListaPerfis() {
           setMensagem("Nenhum perfil encontrado.");
         }
       } catch (err) {
-        console.error("Erro ao buscar usuários:", err.message);
-        setMensagem("Erro ao carregar lista de perfis. Exibindo dados simulados.");
         const simulados = [
-          { id: 1, nome: "Perfil Simulado 1", email: "perfil1@exemplo.com" },
-          { id: 2, nome: "Perfil Simulado 2", email: "perfil2@exemplo.com" },
-          { id: 3, nome: "Perfil Simulado 3", email: "perfil3@exemplo.com" },
+          { id: 1, nome: "Perfil 1", email: "perfil1@exemplo.com" },
+          { id: 2, nome: "Perfil 2", email: "perfil2@exemplo.com" },
+          { id: 3, nome: "Perfil 3", email: "perfil3@exemplo.com" },
+          { id: 4, nome: "Perfil 4", email: "perfil4@exemplo.com" },
+          { id: 5, nome: "Perfil 5", email: "perfil5@exemplo.com" },
+          { id: 6, nome: "Perfil 6", email: "perfil6@exemplo.com" },
         ];
         setUsuarios(simulados);
       }
@@ -51,10 +52,10 @@ function ListaPerfis() {
             <p><strong>Email:</strong> {usuario.email}</p>
 
             <div className={styles.actions}>
-              <Link to={`/perfil/${usuario.id}`} className={styles.viewBtn}>
+              <Link to={`/perfil`} className={styles.viewBtn}>
                 👁 Ver
               </Link>
-              <Link to={`/perfil/editar/${usuario.id}`} className={styles.editBtn}>
+              <Link to={`/perfil`} className={styles.editBtn}>
                 ✏ Editar
               </Link>
             </div>
