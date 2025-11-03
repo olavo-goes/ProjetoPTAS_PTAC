@@ -1,0 +1,144 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  padding: 40px 20px;
+}
+
+.title {
+  font-size: 2rem;
+  color: #4b0082;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.consulta-box {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo label {
+  font-weight: 600;
+  color: #333;
+}
+
+.campo input,
+.campo select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: #4b0082;
+  box-shadow: 0 0 4px rgba(75, 0, 130, 0.3);
+}
+
+.botoes {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.btn-consultar,
+.btn-limpar {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-consultar {
+  background-color: #4b0082;
+  color: #fff;
+}
+
+.btn-consultar:hover {
+  background-color: #5e0aa8;
+}
+
+.btn-limpar {
+  background-color: #dcdcdc;
+  color: #333;
+}
+
+.btn-limpar:hover {
+  background-color: #c0c0c0;
+}
+
+.mensagem-erro {
+  color: red;
+  text-align: center;
+  font-weight: 500;
+}
+
+.mensagem-sucesso {
+  color: #21e40f;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+
+
+/* Botões */
+.btnConsultar,
+.btnLimpar {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Consultar - roxo */
+.btnConsultar {
+  background: linear-gradient(135deg, #4b0082, #6a0dad);
+  color: #fff;
+}
+
+.btnConsultar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #5e0aa8, #7c1bcf);
+}
+
+/* Botão Limpar - cinza */
+.btnLimpar {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btnLimpar:hover {
+  background-color: #cfcfcf;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

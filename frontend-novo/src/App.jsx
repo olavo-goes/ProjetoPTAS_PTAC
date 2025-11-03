@@ -8,6 +8,7 @@ import ListaPerfis from "./pages/ListaPerfis";
 import CadastroMesa from "./pages/CadastroMesa";
 import ReservaMesa from "./pages/ReservaMesa";
 import ListarReservas from "./pages/ListarReservas";
+import ConsultarMesas from "./pages/ConsultarMesas";
 
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/cadastro-mesas" element={<CadastroMesa />} />
         <Route path="/reserva-mesas" element={<ReservaMesa />} />
         <Route path="/listar-reservas" element={<ListarReservas />} />
+        <Route path="/consultarMesas" element={<ConsultarMesas/>} />
       </Routes>
     </Router>
   );
