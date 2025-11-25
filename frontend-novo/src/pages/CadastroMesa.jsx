@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import api from "../services/api";
+import React, { useState } from "react";
 import styles from "../styles/CadastroMesa.module.css";
 
 function CadastroMesa() {
@@ -8,80 +7,43 @@ function CadastroMesa() {
     capacidade: "",
     descricao: "",
   });
+
   const [mensagem, setMensagem] = useState("");
   const [mesas, setMesas] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
 
-  // 🔹 Carrega mesas e reservas
-  useEffect(() => {
-    buscarMesas();
-  }, []);
-
-  const buscarMesas = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const responseMesas = await api.get("/mesas", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // 🔹 Buscar reservas para cruzar com mesas
-      const responseReservas = await api.get("/reservas", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const reservas = responseReservas.data;
-
-      // 🔹 Atualiza status com base nas reservas ativas
-      const mesasAtualizadas = responseMesas.data.map((mesa) => {
-        const reservaAtiva = reservas.find(
-          (reserva) =>
-            reserva.mesaId === mesa.id &&
-            reserva.status !== "cancelada" &&
-            reserva.status !== "finalizada"
-        );
-        return {
-          ...mesa,
-          status: reservaAtiva ? "ocupada" : "disponível",
-        };
-      });
-
-      setMesas(mesasAtualizadas);
-    } catch (err) {
-      console.error(err);
-      setMensagem("Erro ao carregar mesas e reservas.");
-    }
-  };
-
+  // 🔹 Atualiza inputs
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Cadastrar ou atualizar mesa
-  const handleSubmit = async (e) => {
+  // 🔹 Simula salvar / atualizar
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
-    try {
+    setMensagem("Salvando...");
+
+    setTimeout(() => {
       if (editandoId) {
-        await api.put(`/mesas/${editandoId}`, form, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // Atualiza mesa existente
+        const mesasAtualizadas = mesas.map((m) =>
+          m.id === editandoId ? { ...m, ...form } : m
+        );
+        setMesas(mesasAtualizadas);
         setMensagem("Mesa atualizada com sucesso!");
       } else {
-        await api.post("/mesas", form, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // Cria nova mesa
+        const novaMesa = {
+          id: Date.now(),
+          ...form,
+        };
+        setMesas([...mesas, novaMesa]);
         setMensagem("Mesa cadastrada com sucesso!");
       }
 
       setForm({ numero: "", capacidade: "", descricao: "" });
       setEditandoId(null);
-      buscarMesas();
-    } catch (err) {
-      console.error(err);
-      setMensagem("Erro ao salvar mesa. Tente novamente.");
-    }
+    }, 700); // simula demora
   };
 
   const handleEditar = (mesa) => {
@@ -93,18 +55,10 @@ function CadastroMesa() {
     setEditandoId(mesa.id);
   };
 
-  const handleExcluir = async (id) => {
-    const token = localStorage.getItem("token");
+  const handleExcluir = (id) => {
     if (window.confirm("Deseja realmente excluir esta mesa?")) {
-      try {
-        await api.delete(`/mesas/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setMensagem("Mesa excluída com sucesso!");
-        buscarMesas();
-      } catch (err) {
-        setMensagem("Erro ao excluir mesa.");
-      }
+      setMesas(mesas.filter((mesa) => mesa.id !== id));
+      setMensagem("Mesa excluída com sucesso!");
     }
   };
 
@@ -116,7 +70,7 @@ function CadastroMesa() {
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <label>
-          Número da Mesa (ID):
+          Número da Mesa:
           <input
             type="text"
             name="numero"
@@ -128,7 +82,7 @@ function CadastroMesa() {
         </label>
 
         <label>
-          Capacidade (quantidade de lugares):
+          Capacidade:
           <input
             type="number"
             name="capacidade"
@@ -140,7 +94,7 @@ function CadastroMesa() {
         </label>
 
         <label>
-          Descrição (opcional):
+          Descrição:
           <textarea
             name="descricao"
             value={form.descricao}
@@ -160,17 +114,9 @@ function CadastroMesa() {
           <li key={mesa.id} className={styles.item}>
             <div>
               <strong>Número:</strong> {mesa.numero} |{" "}
-              <strong>Capacidade:</strong> {mesa.capacidade} |{" "}
-              <strong>Status:</strong>{" "}
-              <span
-                style={{
-                  color: mesa.status === "ocupada" ? "red" : "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {mesa.status}
-              </span>
+              <strong>Capacidade:</strong> {mesa.capacidade}
             </div>
+
             <div className={styles.btnGroup}>
               <button
                 onClick={() => handleEditar(mesa)}
@@ -178,6 +124,7 @@ function CadastroMesa() {
               >
                 Editar
               </button>
+
               <button
                 onClick={() => handleExcluir(mesa.id)}
                 className={styles.deleteBtn}
