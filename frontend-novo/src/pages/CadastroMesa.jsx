@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import api from "../services/api";
 import styles from "../styles/CadastroMesa.module.css";
+import api from "../services/api";
 
 function CadastroMesa() {
   const [form, setForm] = useState({
@@ -8,6 +8,7 @@ function CadastroMesa() {
     capacidade: "",
     descricao: "",
   });
+
   const [mensagem, setMensagem] = useState("");
   const [mesas, setMesas] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
@@ -24,24 +25,25 @@ function CadastroMesa() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-     const responseReservas = await api.get("/reservas", {
-  headers: { Authorization: `Bearer ${token}` },
-});
+      const responseReservas = await api.get("/reservas", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-const reservas = responseReservas.data.reservas;
+      const reservas = responseReservas.data.reservas;
 
-const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
-  const reservaAtiva = reservas.find(
-    (reserva) =>
-      reserva.mesaId === mesa.id &&
-      reserva.status !== "cancelada" &&
-      reserva.status !== "finalizada"
-  );
-  return {
-    ...mesa,
-    status: reservaAtiva ? "ocupada" : "disponível",
-  };
-}); 
+      const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
+        const reservaAtiva = reservas.find(
+          (reserva) =>
+            reserva.mesaId === mesa.id &&
+            reserva.status !== "cancelada" &&
+            reserva.status !== "finalizada"
+        );
+        return {
+          ...mesa,
+          status: reservaAtiva ? "ocupada" : "disponível",
+        };
+      });
+
       setMesas(mesasAtualizadas);
     } catch (err) {
       console.error(err);
@@ -81,7 +83,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
       buscarMesas();
     } catch (err) {
       console.error(err);
-      setMensagem("Erro ao salvar mesa. Tente novamente.");
+      setMensagem("Erro ao salvar mesa.");
     }
   };
 
@@ -96,6 +98,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
 
   const handleExcluir = async (id) => {
     const token = localStorage.getItem("token");
+
     if (window.confirm("Deseja realmente excluir esta mesa?")) {
       try {
         await api.delete(`/mesas/${id}`, {
@@ -104,6 +107,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
         setMensagem("Mesa excluída com sucesso!");
         buscarMesas();
       } catch (err) {
+        console.error(err);
         setMensagem("Erro ao excluir mesa.");
       }
     }
@@ -117,7 +121,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <label>
-          Número da Mesa (ID):
+          Número da Mesa:
           <input
             type="text"
             name="numero"
@@ -129,7 +133,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
         </label>
 
         <label>
-          Capacidade (quantidade de lugares):
+          Capacidade:
           <input
             type="number"
             name="capacidade"
@@ -141,7 +145,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
         </label>
 
         <label>
-          Descrição (opcional):
+          Descrição:
           <textarea
             name="descricao"
             value={form.descricao}
@@ -162,16 +166,9 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
             <div>
               <strong>Número:</strong> {mesa.numero} |{" "}
               <strong>Capacidade:</strong> {mesa.capacidade} |{" "}
-              <strong>Status:</strong>{" "}
-              <span
-                style={{
-                  color: mesa.status === "ocupada" ? "red" : "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {mesa.status}
-              </span>
+              <strong>Status:</strong> {mesa.status}
             </div>
+
             <div className={styles.btnGroup}>
               <button
                 onClick={() => handleEditar(mesa)}
@@ -179,6 +176,7 @@ const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
               >
                 Editar
               </button>
+
               <button
                 onClick={() => handleExcluir(mesa.id)}
                 className={styles.deleteBtn}
