@@ -6,8 +6,14 @@ import styles from "../styles/Cadastro.module.css";
 function Cadastro() {
   const [cadastro, setCadastro] = useState({
     nome: "",
+    sobrenome: "",
     email: "",
-    password: ""
+    password: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    uf: ""
   });
 
   const [mensagem, setMensagem] = useState("");
@@ -35,6 +41,12 @@ function Cadastro() {
       <h2 className={styles.title}>Cadastro</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input name="nome" placeholder="Nome" onChange={handleChange} className={styles.input} />
+        <input name="sobrenome" placeholder="Sobrenome" onChange={handleChange} className={styles.input} />
+        <input name="Rua" placeholder="Rua" onChange={handleChange} className={styles.input} />
+        <input name="numero" placeholder="Numero" onChange={handleChange} className={styles.input} />
+        <input name="bairro" placeholder="Bairro" onChange={handleChange} className={styles.input} />
+        <input name="cidade" placeholder="Cidade" onChange={handleChange} className={styles.input} />
+        <input name="uf" placeholder="Uf" onChange={handleChange} className={styles.input} />
         <input name="email" type="email" placeholder="Email" onChange={handleChange} className={styles.input} />
         <input name="password" type="password" placeholder="Senha" onChange={handleChange} className={styles.input} />
         <button type="submit" className={styles.button}>Cadastrar</button>

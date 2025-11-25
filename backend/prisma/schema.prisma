@@ -1,15 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-
 generator client {
   provider = "prisma-client-js"
 }
-
 
 datasource db {
   provider = "sqlite"
@@ -17,35 +8,39 @@ datasource db {
 }
 
 model Usuario {
-  id       Int     @id @default(autoincrement())
-  nome     String
-  email    String  @unique
-  password    String
-  isAdmin  Boolean @default(false)
-  dataCadastro       DateTime @default(now())
-  ultimaAtualizacao  DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  nome              String
+  sobrenome         String
+  email             String   @unique
+  password          String
+  rua               String
+  numero            String
+  bairro            String
+  cidade            String
+  uf                String
+  isAdmin           Boolean  @default(false)
+  dataCadastro      DateTime @default(now())
+  ultimaAtualizacao DateTime @updatedAt
 
-
-  reservas  Reserva[]
+  reservas Reserva[]
 }
-
 
 model Mesa {
-   id        Int     @id @default(autoincrement())
-   codigo    String
-   n_lugares String
+  id         Int     @id @default(autoincrement())
+  numero     String
+  capacidade Int
+  descricao  String?
 
-   reservas  Reserva[]
+  reservas   Reserva[]
 }
 
-
 model Reserva {
-   id         Int      @id @default(autoincrement())
-   data       DateTime
-   n_pessoas  Int
-   mesaId     Int
-   usuarioId  Int
+  id         Int      @id @default(autoincrement())
+  data       DateTime
+  n_pessoas  Int
+  mesaId     Int
+  usuarioId  Int
 
-   mesa       Mesa     @relation(fields: [mesaId], references: [id])
-   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  mesa       Mesa     @relation(fields: [mesaId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 }

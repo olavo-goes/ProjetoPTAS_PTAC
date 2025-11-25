@@ -6,11 +6,21 @@ function Perfil() {
   const [usuario, setUsuario] = useState(null);
   const [mensagem, setMensagem] = useState("");
   const [editando, setEditando] = useState(false);
-  const [form, setForm] = useState({ nome: "", email: "", senhaAtual: "", novaSenha: "" });
+  const [form, setForm] = useState({
+    nome: "",
+    sobrenome: "",
+    email: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    uf: "",
+    senhaAtual: "",
+    novaSenha: ""
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     const fetchPerfil = async () => {
       try {
         const res = await api.get("/perfil", {
@@ -21,17 +31,31 @@ function Perfil() {
         setUsuario(res.data.usuario);
         setForm({
           nome: res.data.usuario.nome,
+          sobrenome: res.data.usuario.sobrenome,
           email: res.data.usuario.email,
+          rua: res.data.usuario.rua,
+          numero: res.data.usuario.numero,
+          bairro: res.data.usuario.bairro,
+          cidade: res.data.usuario.cidade,
+          uf: res.data.usuario.uf,
           senhaAtual: "",
           novaSenha: "",
         });
       } catch (err) {
-        const simulado = { nome: "Usuário 1", email: "usuario1@exemplo.com" };
+        const simulado = {
+          nome: "Usuário 1",
+          sobrenome: "Sobrenome",
+          email: "usuario1@exemplo.com",
+          rua: "Rua A",
+          numero: "123",
+          bairro: "Centro",
+          cidade: "Cidade",
+          uf: "MS"
+        };
         setUsuario(simulado);
         setForm({ ...simulado, senhaAtual: "", novaSenha: "" });
       }
     };
-
     fetchPerfil();
   }, []);
 
@@ -42,19 +66,24 @@ function Perfil() {
   const handleSalvar = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      // Atualiza nome e e-mail
-      const res = await api.put(
+      const res = await api.patch(
         "/perfil",
-        { nome: form.nome, email: form.email },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { usuario: { 
+            nome: form.nome,
+            sobrenome: form.sobrenome,
+            email: form.email,
+            rua: form.rua,
+            numero: form.numero,
+            bairro: form.bairro,
+            cidade: form.cidade,
+            uf: form.uf
+          } 
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Atualiza senha (se informada)
       if (form.senhaAtual && form.novaSenha) {
-        await api.put(
+        await api.patch(
           "/perfil/senha",
           { senhaAtual: form.senhaAtual, novaSenha: form.novaSenha },
           { headers: { Authorization: `Bearer ${token}` } }
@@ -66,7 +95,16 @@ function Perfil() {
       setEditando(false);
       setForm({ ...form, senhaAtual: "", novaSenha: "" });
     } catch (err) {
-      setUsuario({ nome: form.nome, email: form.email });
+      setUsuario({ 
+        nome: form.nome,
+        sobrenome: form.sobrenome,
+        email: form.email,
+        rua: form.rua,
+        numero: form.numero,
+        bairro: form.bairro,
+        cidade: form.cidade,
+        uf: form.uf
+      });
       setEditando(false);
     }
   };
@@ -78,7 +116,6 @@ function Perfil() {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Meu Perfil</h2>
-
       <div className={styles.card}>
         {editando ? (
           <div className={styles.form}>
@@ -92,7 +129,16 @@ function Perfil() {
                 className={styles.input}
               />
             </label>
-
+            <label>
+              Sobrenome:
+              <input
+                type="text"
+                name="sobrenome"
+                value={form.sobrenome}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
             <label>
               Email:
               <input
@@ -103,7 +149,56 @@ function Perfil() {
                 className={styles.input}
               />
             </label>
-
+            <label>
+              Rua:
+              <input
+                type="text"
+                name="rua"
+                value={form.rua}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label>
+              Número:
+              <input
+                type="text"
+                name="numero"
+                value={form.numero}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label>
+              Bairro:
+              <input
+                type="text"
+                name="bairro"
+                value={form.bairro}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label>
+              Cidade:
+              <input
+                type="text"
+                name="cidade"
+                value={form.cidade}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label>
+              UF:
+              <input
+                type="text"
+                name="uf"
+                value={form.uf}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </label>
             <div className={styles.senhaSection}>
               <h4>Alterar senha</h4>
               <label>
@@ -127,7 +222,6 @@ function Perfil() {
                 />
               </label>
             </div>
-
             <div className={styles.buttons}>
               <button onClick={handleSalvar} className={styles.saveBtn}>
                 Salvar
@@ -146,14 +240,19 @@ function Perfil() {
         ) : (
           <div className={styles.info}>
             <p><strong>Nome:</strong> {usuario.nome}</p>
+            <p><strong>Sobrenome:</strong> {usuario.sobrenome}</p>
             <p><strong>Email:</strong> {usuario.email}</p>
+            <p><strong>Rua:</strong> {usuario.rua}</p>
+            <p><strong>Número:</strong> {usuario.numero}</p>
+            <p><strong>Bairro:</strong> {usuario.bairro}</p>
+            <p><strong>Cidade:</strong> {usuario.cidade}</p>
+            <p><strong>UF:</strong> {usuario.uf}</p>
             <button onClick={() => setEditando(true)} className={styles.editBtn}>
               Editar Perfil
             </button>
           </div>
         )}
       </div>
-
       {mensagem && <p className={styles.message}>{mensagem}</p>}
     </div>
   );

@@ -12,7 +12,6 @@ function CadastroMesa() {
   const [mesas, setMesas] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
 
-  // 🔹 Carrega mesas e reservas
   useEffect(() => {
     buscarMesas();
   }, []);
@@ -25,27 +24,24 @@ function CadastroMesa() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // 🔹 Buscar reservas para cruzar com mesas
-      const responseReservas = await api.get("/reservas", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+     const responseReservas = await api.get("/reservas", {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
-      const reservas = responseReservas.data;
+const reservas = responseReservas.data.reservas;
 
-      // 🔹 Atualiza status com base nas reservas ativas
-      const mesasAtualizadas = responseMesas.data.map((mesa) => {
-        const reservaAtiva = reservas.find(
-          (reserva) =>
-            reserva.mesaId === mesa.id &&
-            reserva.status !== "cancelada" &&
-            reserva.status !== "finalizada"
-        );
-        return {
-          ...mesa,
-          status: reservaAtiva ? "ocupada" : "disponível",
-        };
-      });
-
+const mesasAtualizadas = responseMesas.data.mesas.map((mesa) => {
+  const reservaAtiva = reservas.find(
+    (reserva) =>
+      reserva.mesaId === mesa.id &&
+      reserva.status !== "cancelada" &&
+      reserva.status !== "finalizada"
+  );
+  return {
+    ...mesa,
+    status: reservaAtiva ? "ocupada" : "disponível",
+  };
+}); 
       setMesas(mesasAtualizadas);
     } catch (err) {
       console.error(err);
@@ -57,19 +53,24 @@ function CadastroMesa() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Cadastrar ou atualizar mesa
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     try {
+      const payload = {
+        numero: form.numero,
+        capacidade: parseInt(form.capacidade),
+        descricao: form.descricao,
+      };
+
       if (editandoId) {
-        await api.put(`/mesas/${editandoId}`, form, {
+        await api.put(`/mesas/${editandoId}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMensagem("Mesa atualizada com sucesso!");
       } else {
-        await api.post("/mesas", form, {
+        await api.post("/mesas", payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMensagem("Mesa cadastrada com sucesso!");

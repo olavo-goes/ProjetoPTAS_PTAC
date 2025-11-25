@@ -6,14 +6,13 @@ function ReservaMesa() {
   const [form, setForm] = useState({
     data: "",
     horario: "",
-    nomeCliente: "",
-    contato: "",
     mesaId: "",
+    n_pessoas: ""
   });
+
   const [mensagem, setMensagem] = useState("");
   const [mesas, setMesas] = useState([]);
 
-  // 🔹 Carrega mesas disponíveis
   useEffect(() => {
     buscarMesasDisponiveis();
   }, []);
@@ -30,13 +29,16 @@ function ReservaMesa() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const reservasAtivas = responseReservas.data.filter(
+      const reservas = responseReservas.data.reservas || [];
+
+      const reservasAtivas = reservas.filter(
         (reserva) =>
           reserva.status !== "cancelada" && reserva.status !== "finalizada"
       );
 
-      // 🔹 Filtra apenas mesas livres
-      const mesasLivres = responseMesas.data.filter(
+      const mesas = responseMesas.data.mesas || [];
+
+      const mesasLivres = mesas.filter(
         (mesa) => !reservasAtivas.find((r) => r.mesaId === mesa.id)
       );
 
@@ -56,23 +58,37 @@ function ReservaMesa() {
     const token = localStorage.getItem("token");
 
     try {
-      await api.post("/reservas", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post(
+        "/reservas/novo",
+        {
+          mesaId: Number(form.mesaId),
+          data: form.data,
+          horario: form.horario,
+          n_pessoas: Number(form.n_pessoas),
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setMensagem("Reserva confirmada com sucesso!");
+
       setForm({
         data: "",
         horario: "",
-        nomeCliente: "",
-        contato: "",
         mesaId: "",
+        n_pessoas: "",
       });
 
-      buscarMesasDisponiveis(); // Atualiza lista de mesas
+      buscarMesasDisponiveis();
     } catch (err) {
-      console.error(err);
-      setMensagem("Erro ao confirmar reserva. Tente novamente.");
+      console.error("Erro ao reservar:", err);
+
+      if (err.response) {
+        setMensagem(err.response.data.mensagem || "Erro ao confirmar reserva.");
+      } else {
+        setMensagem("Erro inesperado ao reservar.");
+      }
     }
   };
 
@@ -108,11 +124,11 @@ function ReservaMesa() {
         </label>
 
         <label>
-          Nome do Cliente:
+          Nº de Pessoas:
           <input
-            type="text"
-            name="nomeCliente"
-            value={form.nomeCliente}
+            type="number"
+            name="n_pessoas"
+            value={form.n_pessoas}
             onChange={handleChange}
             className={styles.input}
             required
@@ -120,19 +136,7 @@ function ReservaMesa() {
         </label>
 
         <label>
-          Contato:
-          <input
-            type="text"
-            name="contato"
-            value={form.contato}
-            onChange={handleChange}
-            className={styles.input}
-            required
-          />
-        </label>
-
-        <label>
-          Seleção da Mesa:
+          Mesa:
           <select
             name="mesaId"
             value={form.mesaId}
