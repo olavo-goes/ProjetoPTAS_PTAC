@@ -115,6 +115,13 @@ function Perfil() {
 
   return (
     <div className={styles.container}>
+    <button 
+  onClick={() => window.location.href = "/area-logada"} 
+  className={styles.backBtn}
+>
+  Voltar para a Página Inicial
+</button>
+
       <h2 className={styles.title}>Meu Perfil</h2>
       <div className={styles.card}>
         {editando ? (

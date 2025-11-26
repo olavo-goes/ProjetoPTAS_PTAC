@@ -184,3 +184,19 @@
   margin-bottom: 10px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+
+.backBtn {
+  background-color: #c91eeb;
+  color: white;
+  padding: 10px 16px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.backBtn:hover {
+  background-color: #333;
+}
