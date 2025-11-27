@@ -64,7 +64,7 @@
   margin-top: 0.5rem;
 }
 
-/* 🔵 Botão Editar */
+
 .editBtn {
   background-color: #2980b9;
   color: white;
@@ -80,7 +80,7 @@
   background-color: #3498db;
 }
 
-/* 🔴 Botão Excluir */
+
 .deleteBtn {
   background-color: #c0392b;
   color: white;

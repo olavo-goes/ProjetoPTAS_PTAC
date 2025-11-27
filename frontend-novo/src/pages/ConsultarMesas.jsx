@@ -5,52 +5,36 @@ export default function ConsultarMesas() {
   const [numeroMesa, setNumeroMesa] = useState("");
   const [statusMesa, setStatusMesa] = useState("");
   const [capacidadeMesa, setCapacidadeMesa] = useState("");
-  const [capacidade, setCapacidade] = useState(null);
+  const [resultado, setResultado] = useState([]);
   const [erro, setErro] = useState("");
 
   const mesas = [
     { numero: 1, status: "livre", capacidade: 4 },
     { numero: 2, status: "ocupada", capacidade: 6 },
     { numero: 3, status: "reservada", capacidade: 2 },
-    { numero: 4, status: "livre", capacidade: 8 },
+    { numero: 4, status: "livre", capacidade: 8 }
   ];
 
   const handleConsultar = () => {
     setErro("");
-    setCapacidade(null);
+    setResultado([]);
 
     if (!numeroMesa && !statusMesa && !capacidadeMesa) {
       setErro("Informe pelo menos um filtro para consultar!");
       return;
     }
 
-    const resultado = mesas.find((m) => {
-      if (numeroMesa && statusMesa && capacidadeMesa) {
-        return (
-          m.numero === Number(numeroMesa) &&
-          m.status === statusMesa &&
-          m.capacidade === Number(capacidadeMesa)
-        );
-      } else if (numeroMesa && statusMesa) {
-        return m.numero === Number(numeroMesa) && m.status === statusMesa;
-      } else if (numeroMesa && capacidadeMesa) {
-        return m.numero === Number(numeroMesa) && m.capacidade === Number(capacidadeMesa);
-      } else if (statusMesa && capacidadeMesa) {
-        return m.status === statusMesa && m.capacidade === Number(capacidadeMesa);
-      } else if (numeroMesa) {
-        return m.numero === Number(numeroMesa);
-      } else if (statusMesa) {
-        return m.status === statusMesa;
-      } else if (capacidadeMesa) {
-        return m.capacidade === Number(capacidadeMesa);
-      }
-      return false;
+    const filtro = mesas.filter((m) => {
+      if (numeroMesa && m.numero !== Number(numeroMesa)) return false;
+      if (statusMesa && m.status !== statusMesa) return false;
+      if (capacidadeMesa && m.capacidade !== Number(capacidadeMesa)) return false;
+      return true;
     });
 
-    if (resultado) {
-      setCapacidade(resultado.capacidade);
+    if (filtro.length === 0) {
+      setErro("Nenhuma mesa encontrada.");
     } else {
-      setErro("Mesa não encontrada.");
+      setResultado(filtro);
     }
   };
 
@@ -58,7 +42,7 @@ export default function ConsultarMesas() {
     setNumeroMesa("");
     setStatusMesa("");
     setCapacidadeMesa("");
-    setCapacidade(null);
+    setResultado([]);
     setErro("");
   };
 
@@ -66,7 +50,7 @@ export default function ConsultarMesas() {
     <div className={styles.container}>
       <h1 className={styles.title}>Consulta de Mesas</h1>
 
-      <div className={styles.consultaBox}>
+      <div className={styles["consulta-box"]}>
         <div className={styles.campo}>
           <label>Número da mesa:</label>
           <input
@@ -74,6 +58,7 @@ export default function ConsultarMesas() {
             value={numeroMesa}
             onChange={(e) => setNumeroMesa(e.target.value)}
             placeholder="Ex: 1"
+            className={styles.input}
           />
         </div>
 
@@ -82,6 +67,7 @@ export default function ConsultarMesas() {
           <select
             value={statusMesa}
             onChange={(e) => setStatusMesa(e.target.value)}
+            className={styles.select}
           >
             <option value="">Selecione...</option>
             <option value="livre">Livre</option>
@@ -91,34 +77,35 @@ export default function ConsultarMesas() {
         </div>
 
         <div className={styles.campo}>
-          <label>Capacidade da mesa:</label>
-          <select
+          <label>Capacidade (nº de lugares):</label>
+          <input
+            type="number"
             value={capacidadeMesa}
             onChange={(e) => setCapacidadeMesa(e.target.value)}
-          >
-            <option value="">Selecione...</option>
-            <option value="2">2 pessoas</option>
-            <option value="4">4 pessoas</option>
-            <option value="6">6 pessoas</option>
-            <option value="8">8 pessoas</option>
-          </select>
+            placeholder="Ex: 4"
+            className={styles.input}
+          />
         </div>
 
         <div className={styles.botoes}>
-          <button className={styles.btnConsultar} onClick={handleConsultar}>
+          <button type="button" className={styles["btn-consultar"]} onClick={handleConsultar}>
             Consultar
           </button>
-          <button className={styles.btnLimpar} onClick={handleLimpar}>
+          <button type="button" className={styles["btn-limpar"]} onClick={handleLimpar}>
             Limpar
           </button>
         </div>
 
-        {erro && <p className={styles.mensagemErro}>{erro}</p>}
+        {erro && <p className={styles["message-error"]}>{erro}</p>}
 
-        {capacidade !== null && !erro && (
-          <p className={styles.mensagemSucesso}>
-            Capacidade da mesa: <strong>{capacidade} pessoas</strong>
-          </p>
+        {resultado.length > 0 && (
+          <div className={styles["resultado-box"]}>
+            {resultado.map((m) => (
+              <p key={m.numero} className={styles["message-success"]}>
+                Mesa {m.numero} — {m.status} — {m.capacidade} lugares
+              </p>
+            ))}
+          </div>
         )}
       </div>
     </div>
