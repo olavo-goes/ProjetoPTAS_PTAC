@@ -24,18 +24,53 @@ function Header() {
         <div className={styles.modalOverlay} onClick={fecharMenu}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h2>Menu</h2>
+
             <nav className={styles.modalNav}>
-              <Link to="/" className={styles.modalLink} onClick={fecharMenu}>Login</Link>
-              <Link to="/perfil" className={styles.modalLink} onClick={fecharMenu}>Meu Perfil</Link>
-              <Link to="/perfis" className={styles.modalLink} onClick={fecharMenu}>Usuarios</Link>
-              <Link to="/cadastro-mesas" className={styles.modalLink} onClick={fecharMenu}>Cadastro Mesas</Link>
-              <Link to="/area-logada" className={styles.modalLink} onClick={fecharMenu}>Área Logada</Link>
-              <Link to="/" className={styles.modalLink} onClick={fecharMenu}>Sair</Link>
-              <Link to="/listar-reservas" className={styles.modalLink} onClick={fecharMenu}>Minhas Reservas</Link>
-               <Link to="/consultarMesas" className={styles.modalLink} onClick={fecharMenu}>Ver Mesas</Link>
-               <Link to="/cardapio" className={styles.modalLink} onClick={fecharMenu}>Cardápio</Link>
+              {/* Área principal após login */}
+              <Link to="/area-logada" className={styles.modalLink} onClick={fecharMenu}>
+                Área Logada
+              </Link>
+
+              {/* Perfil e Reservas */}
+              <Link to="/perfil" className={styles.modalLink} onClick={fecharMenu}>
+                Meu Perfil
+              </Link>
+
+              <Link to="/listar-reservas" className={styles.modalLink} onClick={fecharMenu}>
+                Minhas Reservas
+              </Link>
+
+              {/* Mesas e Cardápio */}
+              <Link to="/consultarMesas" className={styles.modalLink} onClick={fecharMenu}>
+                Ver Mesas
+              </Link>
+
+              <Link to="/cardapio" className={styles.modalLink} onClick={fecharMenu}>
+                Cardápio
+              </Link>
+
+              {/* Administração */}
+              <Link to="/cadastro-mesas" className={styles.modalLink} onClick={fecharMenu}>
+                Cadastro Mesas
+              </Link>
+
+              <Link to="/perfis" className={styles.modalLink} onClick={fecharMenu}>
+                Usuários
+              </Link>
+
+              {/* Autenticação */}
+              <Link to="/" className={styles.modalLink} onClick={fecharMenu}>
+                Sair
+              </Link>
+
+              <Link to="/" className={styles.modalLink} onClick={fecharMenu}>
+                Login
+              </Link>
             </nav>
-            <button className={styles.btnFechar} onClick={fecharMenu}>Fechar</button>
+
+            <button className={styles.btnFechar} onClick={fecharMenu}>
+              Fechar
+            </button>
           </div>
         </div>
       )}
