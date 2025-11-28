@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/AreaLogada.module.css";
 import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 import api from "../services/api";
 
 function AreaLogada() {
@@ -57,8 +58,8 @@ function AreaLogada() {
           status: reservaAtiva ? "ocupada" : "disponível",
           horario: reservaAtiva
             ? `${String(new Date(reservaAtiva.data).getHours()).padStart(2, "0")}:${String(
-                new Date(reservaAtiva.data).getMinutes()
-              ).padStart(2, "0")}`
+              new Date(reservaAtiva.data).getMinutes()
+            ).padStart(2, "0")}`
             : null
         };
       });
@@ -126,6 +127,7 @@ function AreaLogada() {
           )}
         </div>
       </div>
+      <Footer text="© 2025 Reserva de Mesas — Informações institucionais" />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import styles from "../styles/Cardapio.module.css";
 import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 
 export default function Cardapio() {
   const [categoria, setCategoria] = useState("Todos");
@@ -24,16 +25,16 @@ export default function Cardapio() {
   const categorias = ["Todos", "Entradas", "Pratos", "Sobremesas", "Bebidas"];
 
   const pratosFiltrados = useMemo(() => {
-    return pratos.filter(p => 
+    return pratos.filter(p =>
       (categoria === "Todos" || p.categoria === categoria) &&
       (p.nome.toLowerCase().includes(query.toLowerCase()) || p.descricao.toLowerCase().includes(query.toLowerCase()))
     );
   }, [categoria, query]);
 
   return (
-    
+
     <div className={styles.container}>
-         <Header />
+      <Header />
       <header className={styles.header}>
         <div className={styles.headerTop}>
           <div>
@@ -95,6 +96,7 @@ export default function Cardapio() {
           </div>
         )}
       </main>
+      <Footer text="© 2025 Reserva de Mesas — Informações institucionais" />
     </div>
   );
 }

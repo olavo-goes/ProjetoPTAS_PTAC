@@ -10,7 +10,7 @@ function Login() {
   });
 
   const [mensagem, setMensagem] = useState("");
-  const navigate = useNavigate(); // ← Hook para navegação
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setLogin({ ...login, [e.target.name]: e.target.value });
