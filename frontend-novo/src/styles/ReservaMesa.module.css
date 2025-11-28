@@ -10,9 +10,17 @@
 
 .title {
   font-size: 2rem;
-  color: #4b0082;
+  color: #4b0082; /* roxo elegante */
   font-weight: 700;
   margin-bottom: 25px;
+  text-align: center;
+}
+
+.message {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #21e40f; /* verde para sucesso */
   text-align: center;
 }
 
@@ -50,7 +58,7 @@ label {
   outline: none;
 }
 
-.submitBtn {
+.btnReserva {
   padding: 10px;
   background-color: #8c00ff;
   color: white;
@@ -62,13 +70,28 @@ label {
   transition: all 0.3s ease;
 }
 
-.submitBtn:hover {
+.btnReserva:hover {
   background-color: #6a00cc;
 }
 
-.message {
-  margin-bottom: 15px;
-  font-size: 1rem;
-  color: #21e40f;
-  text-align: center;
+.card {
+  margin-top: 30px;
+  padding: 20px;
+  width: 320px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  color: #4b0082;
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+  color: #333;
 }

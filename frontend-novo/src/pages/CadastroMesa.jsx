@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from "../styles/CadastroMesa.module.css";
 import api from "../services/api";
 
@@ -116,6 +117,10 @@ function CadastroMesa() {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Cadastro de Mesas</h2>
+
+      <Link to="/area-logada" className={styles.btnVoltar}>
+        ← Voltar para o início
+      </Link>
 
       {mensagem && <p className={styles.message}>{mensagem}</p>}
 

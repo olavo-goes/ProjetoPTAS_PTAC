@@ -228,23 +228,65 @@ class UserController {
     }
 
 
-    static async buscarMesa(req, res) {
-        try {
-            const mesas = await prisma.mesa.findMany();
+   static async buscarMesa(req, res) {
+    try {
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+        const dia = String(hoje.getDate()).padStart(2, "0");
+        const hojeStr = `${ano}-${mes}-${dia}`; // exemplo: 2025-11-27
 
-            res.status(200).json({
-                mensagem: "Mesas carregadas com sucesso!",
-                erro: false,
-                mesas
-            })
-        } catch (err) {
-            console.log("Erro ao buscar mesas!", err.message)
-            res.status(500).json({
-                mensagem: "Erro ao buscar mesas!",
-                erro: true
-            })
-        }
+        // pega mesas e reservas do dia
+        const mesas = await prisma.mesa.findMany({
+            include: {
+                reservas: {
+                    where: {
+                        // reserva salva como DateTime → precisamos comparar só a data
+                        data: {
+                            gte: new Date(`${hojeStr}T00:00:00`),
+                            lte: new Date(`${hojeStr}T23:59:59`)
+                        }
+                    }
+                }
+            }
+        });
+
+        const mesasComStatus = mesas.map(mesa => {
+            if (mesa.reservas.length > 0) {
+                const reserva = mesa.reservas[0];
+
+                const hora = String(reserva.data.getHours()).padStart(2, "0");
+                const minuto = String(reserva.data.getMinutes()).padStart(2, "0");
+
+                return {
+                    ...mesa,
+                    status: "ocupada",
+                    horario: `${hora}:${minuto}`
+                };
+            }
+
+            return {
+                ...mesa,
+                status: "disponível",
+                horario: null
+            };
+        });
+
+        res.status(200).json({
+            mensagem: "Mesas carregadas com sucesso!",
+            erro: false,
+            mesas: mesasComStatus
+        });
+
+    } catch (err) {
+        console.log("Erro ao buscar mesas!", err.message);
+        res.status(500).json({
+            mensagem: "Erro ao buscar mesas!",
+            erro: true
+        });
     }
+}
+
 
     static async cadastrarMesa(req, res) {
         try {
@@ -279,66 +321,116 @@ class UserController {
         }
     }
 
-    static async reservarMesa(req, res) {
-        try {
-            const { mesaId, data, horario, n_pessoas } = req.body;
+   static async reservarMesa(req, res) {
+  try {
+    const { mesaId, data, horario, n_pessoas } = req.body;
 
-            // validação mais robusta
-            if (!mesaId || !data || !horario || n_pessoas == null || n_pessoas <= 0) {
-                return res.status(400).json({
-                    mensagem: "Dados incompletos ou inválidos para reserva!",
-                    erro: true
-                });
-            }
-
-            // cria DateTime completo (string ISO)
-            const dataHoraStr = `${data}T${horario}:00`;
-            const dataHora = new Date(dataHoraStr);
-
-            const reserva = await prisma.reserva.create({
-                data: {
-                    mesaId: parseInt(mesaId),
-                    usuarioId: req.idUsuario, // vem do middleware de autenticação
-                    data: dataHora,
-                    n_pessoas: parseInt(n_pessoas)
-                }
-            });
-
-            res.status(201).json({
-                mensagem: "Reserva realizada com sucesso!",
-                erro: false,
-                reserva
-            });
-        } catch (error) {
-            console.error("Erro ao reservar mesa:", error.message);
-            res.status(500).json({
-                mensagem: "Erro ao realizar reserva!",
-                erro: true
-            });
-        }
+    // validação
+    if (!mesaId || !data || !horario || n_pessoas == null || n_pessoas <= 0) {
+      return res.status(400).json({
+        mensagem: "Dados incompletos ou inválidos para reserva!",
+        erro: true
+      });
     }
 
+    // cria DateTime completo (string ISO)
+    const dataHoraStr = `${data}T${horario}:00`;
+    const dataHora = new Date(dataHoraStr);
 
-    static async verMinhasReservas(req, res) {
-        try {
-            const reservas = await prisma.reserva.findMany({
-                where: { usuarioId: req.idUsuario },
-                include: { mesa: true }
-            });
+    let reserva;
 
-            res.status(200).json({
-                mensagem: "Reservas carregadas com sucesso!",
-                erro: false,
-                reservas
-            });
-        } catch (error) {
-            console.error("Erro ao buscar reservas:", error.message);
-            res.status(500).json({
-                mensagem: "Erro ao buscar reservas!",
-                erro: true
-            });
+    // caso 1: mesaId numérico → mesa do banco
+    if (!isNaN(mesaId)) {
+      reserva = await prisma.reserva.create({
+        data: {
+          mesaId: parseInt(mesaId),
+          usuarioId: req.idUsuario,
+          data: dataHora,
+          n_pessoas: parseInt(n_pessoas),
         }
+      });
+    } else {
+      // caso 2: mesa pré-fixada → salva em campo alternativo
+      reserva = await prisma.reserva.create({
+        data: {
+          mesaFixa: String(mesaId),
+          usuarioId: req.idUsuario,
+          data: dataHora,
+          n_pessoas: parseInt(n_pessoas),
+        }
+      });
     }
+
+    res.status(201).json({
+      mensagem: "Reserva realizada com sucesso!",
+      erro: false,
+      reserva
+    });
+  } catch (error) {
+    console.error("Erro ao reservar mesa:", error.message);
+    res.status(500).json({
+      mensagem: "Erro ao realizar reserva!",
+      erro: true
+    });
+  }
+}
+
+static async verMinhasReservas(req, res) {
+  try {
+    const reservas = await prisma.reserva.findMany({
+      where: { usuarioId: req.idUsuario },
+      include: { mesa: true }
+    });
+
+    const mapFixas = {
+      p1: { numero: "101", capacidade: 4 },
+      p2: { numero: "102", capacidade: 6 },
+      p3: { numero: "103", capacidade: 2 },
+      p4: { numero: "104", capacidade: 8 },
+      p5: { numero: "105", capacidade: 3 },
+      p6: { numero: "106", capacidade: 5 },
+      p7: { numero: "107", capacidade: 4 },
+      p8: { numero: "108", capacidade: 6 },
+      p9: { numero: "109", capacidade: 2 },
+      p10: { numero: "110", capacidade: 3 }
+    };
+
+    const reservasFormatadas = reservas.map(r => {
+      let mesaNumero;
+      let mesaCapacidade;
+      let origem;
+
+      if (r.mesa) {
+        mesaNumero = r.mesa.numero || `00${r.id}`.slice(-3);
+        mesaCapacidade = r.mesa.capacidade || null;
+        origem = "banco";
+      } else if (r.mesaFixa && mapFixas[r.mesaFixa]) {
+        mesaNumero = mapFixas[r.mesaFixa].numero;
+        mesaCapacidade = mapFixas[r.mesaFixa].capacidade;
+        origem = "fixa";
+      } else {
+        // fallback: mesa igual ao número da reserva
+        mesaNumero = `00${r.id}`.slice(-3);
+        mesaCapacidade = null;
+        origem = "desconhecida";
+      }
+
+      return {
+        id: r.id,
+        data: r.data,
+        n_pessoas: r.n_pessoas,
+        mesaNumero,
+        mesaCapacidade,
+        origem
+      };
+    });
+
+    res.json({ reservas: reservasFormatadas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: "Erro ao buscar reservas", erro: true });
+  }
+}
 
     static async atualizarMesa(req, res) {
         try {

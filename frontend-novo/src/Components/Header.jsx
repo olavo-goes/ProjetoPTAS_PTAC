@@ -24,50 +24,35 @@ function Header() {
         <div className={styles.modalOverlay} onClick={fecharMenu}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h2>Menu</h2>
-
             <nav className={styles.modalNav}>
-              {/* Área principal após login */}
               <Link to="/area-logada" className={styles.modalLink} onClick={fecharMenu}>
-                Área Logada
+                Início
               </Link>
-
-              {/* Perfil e Reservas */}
               <Link to="/perfil" className={styles.modalLink} onClick={fecharMenu}>
-                Meu Perfil
+                Meus Dados
               </Link>
-
               <Link to="/listar-reservas" className={styles.modalLink} onClick={fecharMenu}>
-                Minhas Reservas
+                Reservas Realizadas
               </Link>
-
-              {/* Mesas e Cardápio */}
               <Link to="/consultarMesas" className={styles.modalLink} onClick={fecharMenu}>
-                Ver Mesas
+                Mesas Disponíveis
               </Link>
-
               <Link to="/cardapio" className={styles.modalLink} onClick={fecharMenu}>
-                Cardápio
+                Menu de Pratos
               </Link>
-
-              {/* Administração */}
               <Link to="/cadastro-mesas" className={styles.modalLink} onClick={fecharMenu}>
-                Cadastro Mesas
+                Gerenciar Mesas
               </Link>
-
               <Link to="/perfis" className={styles.modalLink} onClick={fecharMenu}>
-                Usuários
+                Gerenciar Usuários
               </Link>
-
-              {/* Autenticação */}
               <Link to="/" className={styles.modalLink} onClick={fecharMenu}>
-                Sair
+                Encerrar Sessão
               </Link>
-
               <Link to="/" className={styles.modalLink} onClick={fecharMenu}>
-                Login
+                Entrar
               </Link>
             </nav>
-
             <button className={styles.btnFechar} onClick={fecharMenu}>
               Fechar
             </button>

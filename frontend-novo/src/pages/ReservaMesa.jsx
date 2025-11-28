@@ -1,101 +1,97 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import api from "../services/api";
 import styles from "../styles/ReservaMesa.module.css";
 
 function ReservaMesa() {
+  const [mesas, setMesas] = useState([]);
   const [form, setForm] = useState({
     data: "",
     horario: "",
     mesaId: "",
-    n_pessoas: ""
+    n_pessoas: "",
   });
 
   const [mensagem, setMensagem] = useState("");
-  const [mesas, setMesas] = useState([]);
+  const [reservaFeita, setReservaFeita] = useState(null);
+  const location = useLocation();
 
+  const mesasFixas = [
+    { id: "p1", numero: "101", capacidade: 4 },
+    { id: "p2", numero: "102", capacidade: 6 },
+    { id: "p3", numero: "103", capacidade: 2 },
+    { id: "p4", numero: "104", capacidade: 8 },
+    { id: "p5", numero: "105", capacidade: 3 },
+    { id: "p6", numero: "106", capacidade: 5 },
+    { id: "p7", numero: "107", capacidade: 4 },
+    { id: "p8", numero: "108", capacidade: 6 },
+    { id: "p9", numero: "109", capacidade: 2 },
+    { id: "p10", numero: "110", capacidade: 3 }
+  ];
+
+  // Pegar mesaId da URL (quando vem do card)
   useEffect(() => {
-    buscarMesasDisponiveis();
+    const params = new URLSearchParams(location.search);
+    const mesaId = params.get("mesaId");
+    if (mesaId) {
+      setForm((prev) => ({ ...prev, mesaId }));
+    }
+  }, [location]);
+
+  // Buscar mesas do banco + fixas
+  useEffect(() => {
+    const fetchMesas = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await api.get("/mesas", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const mesasBanco = res.data.mesas || [];
+
+        const numerosBanco = new Set(mesasBanco.map((m) => String(m.numero)));
+        const fixasNaoDuplicadas = mesasFixas.filter(
+          (m) => !numerosBanco.has(String(m.numero))
+        );
+
+        setMesas([...mesasBanco, ...fixasNaoDuplicadas]);
+      } catch (err) {
+        console.error("Erro ao carregar mesas:", err);
+        setMesas(mesasFixas);
+      }
+    };
+    fetchMesas();
   }, []);
 
-  const buscarMesasDisponiveis = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const responseMesas = await api.get("/mesas", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const responseReservas = await api.get("/reservas", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const reservas = responseReservas.data.reservas || [];
-
-      const reservasAtivas = reservas.filter(
-        (reserva) =>
-          reserva.status !== "cancelada" && reserva.status !== "finalizada"
-      );
-
-      const mesas = responseMesas.data.mesas || [];
-
-      const mesasLivres = mesas.filter(
-        (mesa) => !reservasAtivas.find((r) => r.mesaId === mesa.id)
-      );
-
-      setMesas(mesasLivres);
-    } catch (err) {
-      console.error(err);
-      setMensagem("Erro ao carregar mesas disponíveis.");
-    }
-  };
-
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-
     try {
-      await api.post(
-        "/reservas/novo",
-        {
-          mesaId: Number(form.mesaId),
-          data: form.data,
-          horario: form.horario,
-          n_pessoas: Number(form.n_pessoas),
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      setMensagem("Reserva confirmada com sucesso!");
-
-      setForm({
-        data: "",
-        horario: "",
-        mesaId: "",
-        n_pessoas: "",
+      const res = await api.post("/reservas/novo", form, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      buscarMesasDisponiveis();
+      setMensagem("Reserva realizada com sucesso!");
+      setReservaFeita(res.data.reserva); // guarda a reserva retornada pelo backend
     } catch (err) {
-      console.error("Erro ao reservar:", err);
-
-      if (err.response) {
-        setMensagem(err.response.data.mensagem || "Erro ao confirmar reserva.");
-      } else {
-        setMensagem("Erro inesperado ao reservar.");
-      }
+      console.error(err);
+      setMensagem("Erro ao fazer reserva.");
     }
+  };
+
+  // função auxiliar para pegar info da mesa
+  const getMesaInfo = (mesaId) => {
+    const mesa = mesas.find((m) => m.id === mesaId);
+    if (mesa) return mesa;
+    return mesasFixas.find((m) => m.id === mesaId) || { numero: mesaId, capacidade: null };
   };
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Reserva Mesa</h2>
-
+      <h1 className={styles.title}>Reserva Mesa</h1>
       {mensagem && <p className={styles.message}>{mensagem}</p>}
 
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -106,7 +102,6 @@ function ReservaMesa() {
             name="data"
             value={form.data}
             onChange={handleChange}
-            className={styles.input}
             required
           />
         </label>
@@ -118,7 +113,6 @@ function ReservaMesa() {
             name="horario"
             value={form.horario}
             onChange={handleChange}
-            className={styles.input}
             required
           />
         </label>
@@ -130,7 +124,6 @@ function ReservaMesa() {
             name="n_pessoas"
             value={form.n_pessoas}
             onChange={handleChange}
-            className={styles.input}
             required
           />
         </label>
@@ -141,7 +134,6 @@ function ReservaMesa() {
             name="mesaId"
             value={form.mesaId}
             onChange={handleChange}
-            className={styles.select}
             required
           >
             <option value="">Selecione uma mesa</option>
@@ -153,10 +145,22 @@ function ReservaMesa() {
           </select>
         </label>
 
-        <button type="submit" className={styles.submitBtn}>
+        <button type="submit" className={styles.btnReserva}>
           Confirmar Reserva
         </button>
       </form>
+
+      {/* Card da reserva recém-criada */}
+      {reservaFeita && (
+        <div className={styles.card}>
+          <h3>
+            Mesa {getMesaInfo(reservaFeita.mesaId || reservaFeita.mesaFixa).numero}
+          </h3>
+          <p><strong>Data:</strong> {new Date(reservaFeita.data).toLocaleDateString()}</p>
+          <p><strong>Horário:</strong> {new Date(reservaFeita.data).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+          <p><strong>Pessoas:</strong> {reservaFeita.n_pessoas}</p>
+        </div>
+      )}
     </div>
   );
 }

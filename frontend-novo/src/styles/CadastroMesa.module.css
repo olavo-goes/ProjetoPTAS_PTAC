@@ -64,7 +64,6 @@
   margin-top: 0.5rem;
 }
 
-
 .editBtn {
   background-color: #2980b9;
   color: white;
@@ -80,7 +79,6 @@
   background-color: #3498db;
 }
 
-
 .deleteBtn {
   background-color: #c0392b;
   color: white;
@@ -94,4 +92,25 @@
 
 .deleteBtn:hover {
   background-color: #e74c3c;
+}
+
+.btnVoltar {
+  display: inline-block;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #8b29b9;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnVoltar:hover {
+  background-color: #8a34db;
+  transform: translateY(-2px);
 }

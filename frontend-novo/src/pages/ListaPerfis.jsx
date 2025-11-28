@@ -43,6 +43,10 @@ function ListaPerfis() {
     <div className={styles.container}>
       <h2 className={styles.title}>Lista de Perfis</h2>
 
+      <Link to="/area-logada" className={styles.btnVoltar}>
+        ← Voltar para o início
+      </Link>
+
       {mensagem && <p className={styles.message}>{mensagem}</p>}
 
       <div className={styles.lista}>

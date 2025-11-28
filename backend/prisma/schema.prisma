@@ -38,9 +38,10 @@ model Reserva {
   id         Int      @id @default(autoincrement())
   data       DateTime
   n_pessoas  Int
-  mesaId     Int
+  mesaId     Int?     // agora opcional
+  mesaFixa   String?  // novo campo para mesas pré-fixadas (ex: "p1", "p2")
   usuarioId  Int
 
-  mesa       Mesa     @relation(fields: [mesaId], references: [id])
+  mesa       Mesa?    @relation(fields: [mesaId], references: [id])
   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 }
